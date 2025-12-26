@@ -15,9 +15,16 @@ class SiteController extends Controller
             'Suporte'
         ];
 
-        return view('home', [
-            'name' => $name,
-            'functions' => $functions
-        ]);
+//        return view('home', [
+//            'name' => $name,
+//            'functions' => $functions
+//        ]);
+
+        return view('home', compact('name', 'functions') );
+    }
+
+    public function dashboard()
+    {
+        return view('dashboard');
     }
 }
