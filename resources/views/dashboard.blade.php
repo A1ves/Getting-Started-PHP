@@ -5,5 +5,9 @@
       Dashboard
     </h1>
 
+    <p>
+      Bem-vindo ao seu painel, {{ auth()->user()->name }}!
+    </p>
+
   </main>
 </x-layout>
