@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HabitLog extends Model
 {
@@ -11,4 +12,16 @@ class HabitLog extends Model
         'habit_id',
         'completed_at',
     ];
+
+    // UM REGISTRO DE HABITO PERTENCE A UM USUARIO
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // UM REGISTRO DE HABITO PERTENCE A UM HABITO
+    public function habit(): BelongsTo
+    {
+        return $this->belongsTo(Habit::class);
+    }
 }
