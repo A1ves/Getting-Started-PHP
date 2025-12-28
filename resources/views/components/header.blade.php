@@ -11,7 +11,7 @@
       <form action="{{ route('auth.logout') }}" method="post" class="inline">
         @csrf
 
-        <button type="submit" class="bg-white p-2 border-2">
+        <button type="submit" class="bg-white p-2 border-2 cursor-pointer">
           Sair
         </button>
 
