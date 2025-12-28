@@ -9,12 +9,20 @@
         Cadastrar Hábito
     </a>
 
-    @session('sucess')
+    @session('success')
       <div class="flex">
         <p class="bg-green-100 border-2 border-green-400 text-green-700 p-3 mb-4">
-          {{ session('sucess') }}
+          {{ session('success') }}
         </p>
       </div>
+    @endsession
+
+    @session('error')
+    <div class="flex">
+      <p class="bg-red-100 border-2 border-red-400 text-red-700 p-3 mb-4">
+        {{ session('error') }}
+      </p>
+    </div>
     @endsession
 
     <div>
@@ -34,6 +42,15 @@
             <p>
               {{ $item ->habitLogs -> count() }} dia(s) completado(s)
             </p>
+            <form action="{{ route('habit.destroy', $item) }}" method="POST">
+
+              @csrf
+              @method('DELETE')
+
+              <button type="submit" class="bg-red-500 text-white p-1 hover:opacity-50 transform cursor-pointer">
+                <x-icons.trash />
+              </button>
+            </form>
 
           </div>
         </li>

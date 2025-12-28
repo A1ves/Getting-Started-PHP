@@ -58,6 +58,15 @@ class HabitController extends Controller
      */
     public function destroy(Habit $habit)
     {
-        //
+        if(auth()->id() !== $habit->user_id) {
+            return redirect()
+                ->route('site.dashboard')
+                ->with('error', 'Você não tem permissão para excluir este hábito.');
+        }
+
+        $habit->delete();
+        return redirect()
+            ->route('site.dashboard')
+            ->with('success', 'Hábito excluído com sucesso!');
     }
 }
