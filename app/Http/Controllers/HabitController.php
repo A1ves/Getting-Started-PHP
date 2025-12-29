@@ -42,15 +42,25 @@ class HabitController extends Controller
      */
     public function edit(Habit $habit)
     {
-        //
+        return view('habits.edit', compact('habit'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Habit $habit)
+    public function update(HabitRequest $request, Habit $habit)
     {
-        //
+        if(auth()->id() !== $habit->user_id) {
+            return redirect()
+                ->route('site.dashboard')
+                ->with('error', 'Você não tem permissão para editar este hábito.');
+        }
+
+        $habit->update($request->all());
+
+        return redirect()
+            ->route('site.dashboard')
+            ->with('success', 'Hábito atualizado com sucesso!');
     }
 
     /**
