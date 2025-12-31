@@ -5,7 +5,7 @@
       Dashboard
     </h1>
 
-    <a href="{{ route('habit.create') }}" class=" block bg-white p-2 border-2 font-bold cursor-pointer">
+    <a href="{{ route('habits.create') }}" class=" block bg-white p-2 border-2 font-bold cursor-pointer">
         Cadastrar Hábito
     </a>
 
@@ -43,13 +43,13 @@
               {{ $item ->habitLogs -> count() }} dia(s) completado(s)
             </p>
 
-            <a href="{{ route('habit.edit', $item->id) }}">
+            <a href="{{ route('habits.edit', $item->id) }}">
               <button class="bg-white p-1 hover:opacity-50 transform cursor-pointer">
                 <x-icons.edit />
               </button>
             </a>
 
-            <form action="{{ route('habit.destroy', $item) }}" method="POST">
+            <form action="{{ route('habits.destroy', $item) }}" method="POST">
 
               @csrf
               @method('DELETE')
@@ -65,7 +65,7 @@
         <p>
           Ainda não há hábitos cadastrados.
         </p>
-        <a href="{{ route('habit.create') }}" class=" bg-white p-2 border-2 hover:opacity-50 transform underline">
+        <a href="{{ route('habits.create') }}" class=" bg-white p-2 border-2 hover:opacity-50 transform underline">
           Cadastre um hábito agora!
         </a>
       @endforelse

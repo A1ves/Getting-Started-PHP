@@ -10,6 +10,15 @@ use Illuminate\View\View;
 class HabitController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     */
+    public function index(): View
+    {
+        $habits = auth()->user()->habits;
+        return view('dashboard', compact('habits'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(): View
@@ -25,7 +34,7 @@ class HabitController extends Controller
         $validated = $request->validated();
         auth()->user()->habits()->create($validated);
         return redirect()
-            ->route('site.dashboard')
+            ->route('habits.index')
             ->with('success', 'Habito cadastrado com sucesso!');
     }
 
@@ -52,14 +61,14 @@ class HabitController extends Controller
     {
         if(auth()->id() !== $habit->user_id) {
             return redirect()
-                ->route('site.dashboard')
+                ->route('habits.index')
                 ->with('error', 'Você não tem permissão para editar este hábito.');
         }
 
         $habit->update($request->all());
 
         return redirect()
-            ->route('site.dashboard')
+            ->route('habits.index')
             ->with('success', 'Hábito atualizado com sucesso!');
     }
 
@@ -70,13 +79,13 @@ class HabitController extends Controller
     {
         if(auth()->id() !== $habit->user_id) {
             return redirect()
-                ->route('site.dashboard')
+                ->route('habits.index')
                 ->with('error', 'Você não tem permissão para excluir este hábito.');
         }
 
         $habit->delete();
         return redirect()
-            ->route('site.dashboard')
+            ->route('habits.index')
             ->with('success', 'Hábito excluído com sucesso!');
     }
 }
