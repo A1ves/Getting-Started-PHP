@@ -6,12 +6,15 @@ use App\Http\Requests\HabitRequest;
 use App\Models\Habit;
 use App\Models\HabitLog;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class HabitController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -59,6 +62,7 @@ class HabitController extends Controller
      */
     public function edit(Habit $habit)
     {
+        $this->authorize('update', $habit);
         return view('habits.edit', compact('habit'));
     }
 
@@ -67,11 +71,7 @@ class HabitController extends Controller
      */
     public function update(HabitRequest $request, Habit $habit)
     {
-        if(auth()->id() !== $habit->user_id) {
-            return redirect()
-                ->route('habits.index')
-                ->with('error', 'Você não tem permissão para editar este hábito.');
-        }
+        $this->authorize('update', $habit);
 
         $habit->update($request->all());
 
@@ -85,11 +85,7 @@ class HabitController extends Controller
      */
     public function destroy(Habit $habit)
     {
-        if(auth()->id() !== $habit->user_id) {
-            return redirect()
-                ->route('habits.index')
-                ->with('error', 'Você não tem permissão para excluir este hábito.');
-        }
+        $this->authorize('delete', $habit);
 
         $habit->delete();
         return redirect()
@@ -105,11 +101,7 @@ class HabitController extends Controller
 
     public function toggle(Habit $habit)
     {
-        if(auth()->id() !== $habit->user_id) {
-            return redirect()
-                ->route('habits.index')
-                ->with('error', 'Você não tem permissão para alterar este hábito.');
-        }
+        $this->authorize('toggle', $habit);
 
         $today = Carbon::today()->toDateString();
         $log = HabitLog::query()
