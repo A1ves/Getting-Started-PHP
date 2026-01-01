@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\HabitRequest;
 use App\Models\Habit;
+use App\Models\HabitLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class HabitController extends Controller
@@ -14,10 +17,10 @@ class HabitController extends Controller
      */
     public function index(): View
     {
-        if(!auth()->user()) {
+        if(!Auth::user()) {
             return view('home');
         }
-        $habits = auth()->user()->habits;
+        $habits = Auth::user()->habits;
         return view('dashboard', compact('habits'));
     }
 
@@ -35,7 +38,7 @@ class HabitController extends Controller
     public function store(HabitRequest $request)
     {
         $validated = $request->validated();
-        auth()->user()->habits()->create($validated);
+        Auth::user()->habits()->create($validated);
         return redirect()
             ->route('habits.index')
             ->with('success', 'Habito cadastrado com sucesso!');
@@ -94,7 +97,53 @@ class HabitController extends Controller
 
     public function settings()
     {
-        $habits = auth()->user()->habits;
+        $habits = Auth::user()->habits;
         return view ('habits.settings', compact('habits'));
+    }
+
+    public function toggle(Habit $habit)
+    {
+        if(auth()->id() !== $habit->user_id) {
+            return redirect()
+                ->route('habits.index')
+                ->with('error', 'Você não tem permissão para alterar este hábito.');
+        }
+
+        $today = Carbon::today()->toDateString();
+        $log = HabitLog::query()
+            ->where('habit_id', $habit->id)
+            ->where('completed_at', $today)
+            ->first();
+
+        if($log){
+            $log->delete();
+            return redirect()
+                ->route('habits.index')
+                ->with('success', 'Hábito desmarcado para hoje!');
+        } else {
+            HabitLog::create([
+                'user_id' => Auth::user()->id,
+                'habit_id' => $habit->id,
+                'completed_at' => $today,
+            ]);
+            return redirect()
+                ->route('habits.index')
+                ->with('success', 'Hábito marcado para hoje!');
+        }
+
+//        if($log){
+//            $log->delete();
+//            $message = 'Hábito desmarcado!';
+//        } else {
+//            HabitLog::create([
+//                'user_id' => Auth::user()->id,
+//                'habit_id' => $habit->id,
+//                'completed_at' => $today,
+//            ]);
+//            $message = 'Hábito concluído!';
+//        }
+//        return redirect()
+//            ->route('habits.index')
+//            ->with('success', $message);
     }
 }
