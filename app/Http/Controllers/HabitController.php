@@ -20,7 +20,9 @@ class HabitController extends Controller
         if(!Auth::user()) {
             return view('home');
         }
-        $habits = Auth::user()->habits;
+        $habits = Auth::user()->habits()
+            ->with('habitLogs')
+            ->get();
         return view('dashboard', compact('habits'));
     }
 

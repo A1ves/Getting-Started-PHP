@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -30,4 +31,17 @@ class Habit extends Model
         return $this->hasMany(HabitLog::class);
     }
 
+    public function wasCompletedToday(): bool
+    {
+        return $this->habitLogs
+            ->where('completed_at', Carbon::today()->toDateString())
+            ->isNotEmpty();
+    }
+
+//    public function wasCompletedToday(): bool
+//    {
+//        return $this->habitLogs()
+//            ->where('completed_at', Carbon::today()->toDateString())
+//            ->exists();
+//    }
 }
