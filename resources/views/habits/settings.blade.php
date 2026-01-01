@@ -4,11 +4,11 @@
     <x-navbar/>
 
     @session('success')
-      <div class="flex">
-        <p class="bg-green-100 border-2 border-green-400 text-green-700 p-3 mb-4">
-          {{ session('success') }}
-        </p>
-      </div>
+    <div class="flex">
+      <p class="bg-green-100 border-2 border-green-400 text-green-700 p-3 mb-4">
+        {{ session('success') }}
+      </p>
+    </div>
     @endsession
 
     @session('error')
@@ -21,7 +21,7 @@
 
     <div>
       <h2 class="text-xl mt-8 mb-2">
-        {{ date('d/m/Y') }}
+        Configurar Hábitos
       </h2>
     </div>
 
@@ -29,10 +29,26 @@
       @forelse($habits as $item)
         <li class="habit-shadow-lg p-2 bg-[#FFDAAC]">
           <div class="flex gap-2 items-center">
-            <input type="checkbox" name="" id="" class="w-5 h-5" {{ $item -> done ? 'checked' : '' }} disabled>
             <p class="font-bold text-lg">
               {{ $item -> name }}
             </p>
+
+            <a href="{{ route('habits.edit', $item->id) }}">
+              <button class="bg-white p-1 hover:opacity-50 transform cursor-pointer">
+                <x-icons.edit/>
+              </button>
+            </a>
+
+            <form action="{{ route('habits.destroy', $item) }}" method="POST">
+
+              @csrf
+              @method('DELETE')
+
+              <button type="submit" class="bg-red-500 p-1 hover:opacity-50 transform cursor-pointer">
+                <x-icons.trash/>
+              </button>
+            </form>
+
           </div>
         </li>
       @empty
@@ -43,10 +59,6 @@
           Cadastre um hábito agora!
         </a>
       @endforelse
-        <a href="{{ route('habits.create') }}" class=" block bg-white p-2 habit-shadow-lg habit-button">
-          Cadastrar Hábito
-        </a>
     </ul>
-
   </main>
 </x-layout>
