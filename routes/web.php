@@ -12,10 +12,12 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('auth.logi
 Route::get('/cadastro',[RegisterController::class, 'index'])->name('site.register');
 Route::post('/cadastro',[RegisterController::class, 'store'])->name('auth.register');
 
+
 Route::middleware('auth')->group(function () {
 //    Route::get('/dashboard/habit', [SiteController::class, 'dashboard'])->name('site.dashboard');
     Route::post('/logout', [LoginController::class, 'logout'])->name('auth.logout');
 
     Route::resource('/dashboard/habits', HabitController::class)->except('show');
+    Route::get('/dashboard/habits/configurar', [HabitController::class, 'settings'])->name('habits.settings');
 });
 

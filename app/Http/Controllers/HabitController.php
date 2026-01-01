@@ -14,6 +14,9 @@ class HabitController extends Controller
      */
     public function index(): View
     {
+        if(!auth()->user()) {
+            return view('home');
+        }
         $habits = auth()->user()->habits;
         return view('dashboard', compact('habits'));
     }
@@ -87,5 +90,11 @@ class HabitController extends Controller
         return redirect()
             ->route('habits.index')
             ->with('success', 'Hábito excluído com sucesso!');
+    }
+
+    public function settings()
+    {
+        $habits = auth()->user()->habits;
+        return view ('habits.settings', compact('habits'));
     }
 }
